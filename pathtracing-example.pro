@@ -24,6 +24,7 @@ SOURCES += \
     src/graphics/rasterizer.cpp \
     src/graphics/renderer.cpp \
     src/graphics/tracer.cpp \
+    src/gui/inputhandler.cpp \
     src/gui/mainwindow.cpp \
     src/gui/openglpanel.cpp \
     src/scene/camera.cpp \
@@ -39,6 +40,7 @@ HEADERS += \
     src/graphics/rasterizer.h \
     src/graphics/renderer.h \
     src/graphics/tracer.h \
+    src/gui/inputhandler.h \
     src/gui/mainwindow.h \
     src/gui/openglpanel.h \
     src/scene/camera.h \

@@ -7,6 +7,8 @@ namespace util {
     glm::mat4x4 rotationXMatrix(float angleDeg);
     glm::mat4x4 rotationYMatrix(float angleDeg);
     glm::mat4x4 rotationZMatrix(float angleDeg);
+    glm::mat4x4 translationMatrix(const glm::vec3& translation);
+    glm::mat4x4 translationMatrix(float x, float y, float z);
 }
 
 #endif // MATHS_H

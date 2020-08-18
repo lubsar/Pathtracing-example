@@ -39,4 +39,22 @@ namespace util {
             0.0f, 0.0f, 0.0f, 1.0f
         };
     }
+
+    glm::mat4x4 translationMatrix(const glm::vec3& translation) {
+        return {
+            1.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            translation.x, translation.y, translation.z, 1.0f
+        };
+    }
+
+    glm::mat4x4 translationMatrix(float x, float y, float z) {
+        return {
+            1.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            x, y, z, 1.0f
+        };
+    }
 }

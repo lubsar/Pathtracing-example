@@ -27,6 +27,12 @@ OpenGLPanel::OpenGLPanel(QWidget *parent)
 
     this->timer = new QTimer(this);
     connect(this->timer, &QTimer::timeout, this, &OpenGLPanel::Redraw);
+
+    this->handler = new InputHandler();
+    installEventFilter(this->handler);
+
+    setMouseTracking(true);
+    grabKeyboard();
 }
 
 void OpenGLPanel::Redraw() {
@@ -44,11 +50,17 @@ void OpenGLPanel::initializeGL() {
     initializeOpenGLFunctions();
 
     this->renderer = new Rasterizer();
+    this->scene = new Scene();
 
-    this->cube = new Cube();
-    std::cout << cube->GetMesh().LenIndices() << std::endl;
-    this->cube->Scale(0.5f);
-    this->cube->Move(0.0f, 0.0f, 5.0f);
+    Cube* cube;
+    for(int i = 0; i < 10; i++) {
+        for(int o = 0; o < 10; o++) {
+            cube = new Cube();
+            cube->Scale(0.1f);
+            cube->Move(-0.5f + i * 0.1f, -0.5f + o * 0.1f, -1.0f);
+            scene->AddObject(cube);
+        }
+    }
 
     this->cam = new Camera();
     this->cam->fov = 70;
@@ -60,7 +72,6 @@ void OpenGLPanel::initializeGL() {
     this->cam->farPlane = 100.0f;
     this->cam->Move(0.0f, 0.0f, 0.0f);
 
-
     renderer->Init();
     timer->start(100);
 }
@@ -68,12 +79,59 @@ void OpenGLPanel::initializeGL() {
 void OpenGLPanel::paintGL() {
     this->time += 0.1f;
 
+    float speed = 0.1f;
+
+    float xMove = 0.0f;
+    float yMove = 0.0f;
+    float zMove = 0.0f;
+
+    float pitch = 0.0f;
+    float roll = 0.0f;
+    float yaw = 0.0f;
+
+    if(handler->IsKeyPressed(Qt::Key_W)) {
+        zMove -= speed;
+    }
+    if(handler->IsKeyPressed(Qt::Key_S)) {
+        zMove += speed;
+    }
+    if(handler->IsKeyPressed(Qt::Key_A)) {
+        xMove -= speed;
+    }
+    if(handler->IsKeyPressed(Qt::Key_D)) {
+        xMove += speed;
+    }
+    if(handler->IsKeyPressed(Qt::Key_Right)) {
+        pitch += 2;
+    }
+    if(handler->IsKeyPressed(Qt::Key_Left)) {
+        pitch -= 2;
+    }
+    if(handler->IsKeyPressed(Qt::Key_Up)) {
+        yaw += 2;
+    }
+    if(handler->IsKeyPressed(Qt::Key_Down)) {
+        yaw -= 2;
+    }
+    if(handler->IsKeyPressed(Qt::Key_Shift)) {
+        yMove -= speed;
+    }
+    if(handler->IsKeyPressed(Qt::Key_Space)) {
+        yMove += speed;
+    }
+
+    this->cam->Move(xMove, yMove, zMove);
+    this->cam->pitch += pitch;
+    this->cam->yaw += yaw;
+
+    /*
     this->cube->RotateY(5);
     this->cube->RotateX(3.2f);
     this->cube->Move(0.0f, 0.0f, -0.05f);
+    */
 
     renderer->Clear();
-    renderer->Draw(*cube, *cam);
+    renderer->Draw(*(this->scene), *cam);
 }
 
 void OpenGLPanel::resizeGL(int w, int h) {

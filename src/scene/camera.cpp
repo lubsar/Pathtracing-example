@@ -30,12 +30,8 @@ namespace scene {
     glm::mat4x4& Camera::CalculateViewMatrix() {
         using namespace util;
 
-        *(this->view) = glm::mat4x4(1.0f) * rotationXMatrix(pitch)
-                * rotationYMatrix(yaw) * rotationZMatrix(roll);
-
-        (*this->view)[3][0] = -position[0];
-        (*this->view)[3][1] = -position[1];
-        (*this->view)[3][2] = -position[2];
+        *(this->view) = glm::mat4x4(1.0f) * rotationXMatrix(yaw)
+                * rotationYMatrix(pitch) * rotationZMatrix(roll) * translationMatrix(-position);
 
         return *view;
     }

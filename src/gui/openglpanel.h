@@ -7,10 +7,11 @@
 #include <QOpenGLDebugLogger>
 #include <qopenglfunctions_4_5_core.h>
 
-#include "graphics/rasterizer.h"
+#include "inputhandler.h"
 
-#include "scene/camera.h"
+#include "graphics/rasterizer.h"
 #include "scene/cube.h"
+
 
 class OpenGLPanel : public QOpenGLWidget, protected QOpenGLFunctions_4_5_Core
 {
@@ -23,8 +24,10 @@ private:
     graphics::Rasterizer* renderer;
     QOpenGLDebugLogger* logger;
 
+    InputHandler* handler;
+
     scene::Camera* cam;
-    scene::Cube* cube;
+    scene::Scene* scene;
 
     float time = 0.0f;
     QTimer *timer;
