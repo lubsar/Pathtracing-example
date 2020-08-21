@@ -1,4 +1,5 @@
 #include "maths.h"
+#include "gtc/matrix_inverse.hpp"
 
 namespace util {
     glm::mat4x4 rotationXMatrix(float angleDeg) {
@@ -56,5 +57,21 @@ namespace util {
             0.0f, 0.0f, 1.0f, 0.0f,
             x, y, z, 1.0f
         };
+    }
+
+    glm::mat4x4 inverse(glm::mat4x4& mat) {
+        return glm::inverse(mat);
+    }
+
+    int nextPowerOfTwo(int x) {
+      x--;
+      x |= x >> 1; // handle 2 bit numbers
+      x |= x >> 2; // handle 4 bit numbers
+      x |= x >> 4; // handle 8 bit numbers
+      x |= x >> 8; // handle 16 bit numbers
+      x |= x >> 16; // handle 32 bit numbers
+      x++;
+
+      return x;
     }
 }

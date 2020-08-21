@@ -8,9 +8,10 @@
 #include <qopenglfunctions_4_5_core.h>
 
 #include "inputhandler.h"
+#include "graphics/tracer.h"
 
-#include "graphics/rasterizer.h"
 #include "scene/cube.h"
+#include "scene/sphere.h"
 
 
 class OpenGLPanel : public QOpenGLWidget, protected QOpenGLFunctions_4_5_Core
@@ -21,7 +22,8 @@ public:
     OpenGLPanel(QWidget* parent = nullptr);
 
 private:
-    graphics::Rasterizer* renderer;
+    graphics::Renderer* renderer;
+    graphics::Tracer* tracer;
     QOpenGLDebugLogger* logger;
 
     InputHandler* handler;
@@ -30,6 +32,7 @@ private:
     scene::Scene* scene;
 
     float time = 0.0f;
+    bool traced;
     QTimer *timer;
 
     void Redraw();

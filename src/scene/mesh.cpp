@@ -25,6 +25,11 @@ namespace scene {
         }
     }
 
+    void Mesh::Clear() {
+        this->indices.clear();
+        this->vertices.clear();
+    }
+
     float* Mesh::GetVertexData() {
         return reinterpret_cast<float*>(&this->vertices[0]);
     }
@@ -39,5 +44,13 @@ namespace scene {
 
     int Mesh::LenIndices() {
         return this->indices.size();
+    }
+
+    int Mesh::ElementType() {
+        return this->m_elementType;
+    }
+
+    void Mesh::SetElementType(int elementType) {
+        this->m_elementType = elementType;
     }
 }

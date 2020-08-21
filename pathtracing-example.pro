@@ -20,8 +20,6 @@ INCLUDEPATH += \
     src
 
 SOURCES += \
-    src/graphics/glslprogram.cpp \
-    src/graphics/rasterizer.cpp \
     src/graphics/renderer.cpp \
     src/graphics/tracer.cpp \
     src/gui/inputhandler.cpp \
@@ -30,14 +28,16 @@ SOURCES += \
     src/scene/camera.cpp \
     src/scene/cube.cpp \
     src/scene/mesh.cpp \
+    src/scene/meshsphere.cpp \
     src/scene/object.cpp \
     src/scene/scene.cpp \
+    src/scene/sphere.cpp \
     src/util/maths.cpp \
+    src/util/shader.cpp \
     src\main.cpp
 
 HEADERS += \
     src/graphics/glslprogram.h \
-    src/graphics/rasterizer.h \
     src/graphics/renderer.h \
     src/graphics/tracer.h \
     src/gui/inputhandler.h \
@@ -46,9 +46,12 @@ HEADERS += \
     src/scene/camera.h \
     src/scene/cube.h \
     src/scene/mesh.h \
+    src/scene/meshsphere.h \
     src/scene/object.h \
     src/scene/scene.h \
-    src/util/maths.h
+    src/scene/sphere.h \
+    src/util/maths.h \
+    src/util/shader.h
 
 
 # Default rules for deployment.
@@ -57,8 +60,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    shaders/test_fragment.frag \
-    shaders/test_vertex.vert
+    shaders/renderer.frag \
+    shaders/renderer.vert \
+    shaders/tracer.glsl
 
 COPIES += shaders
 

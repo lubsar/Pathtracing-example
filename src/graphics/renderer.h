@@ -1,23 +1,33 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#ifndef RASTERIZER_H
+#define RASTERIZER_H
 
-#include "scene/camera.h"
+#include <QOpenGLFunctions_4_5_Core>
+
 #include "scene/scene.h"
-#include "scene/object.h"
+#include "scene/camera.h"
 
 namespace graphics {
-    class Renderer
+    class Renderer : protected QOpenGLFunctions_4_5_Core
     {
+    private:
+        GLuint m_program;
+        GLint m_modelLocation, m_projectionLocation, m_viewLocation;
+        GLenum m_polygonMode;
+
+        void Draw(scene::Object&);
+
     public:
         Renderer();
-        virtual ~Renderer();
+        ~Renderer();
 
-        virtual void Init();
-        virtual void Clear();
+        void Prepare();
+        void Clear();
 
-        virtual void Draw(scene::Scene& scene, scene::Camera& camera);
-        virtual void Draw(scene::Object& obj, scene::Camera& camera);
+        void Draw(scene::Scene& scene, scene::Camera& camera);
+        void Draw(scene::Object& obj, scene::Camera& camera);
+
+        void SetPolygonMode(GLenum mode);
+        GLenum GetPolygonMode();
     };
 }
-
-#endif // RENDERER_H
+#endif // RASTERIZER_H

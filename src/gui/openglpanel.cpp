@@ -5,6 +5,7 @@
 #include "gtc/type_ptr.hpp"
 
 #include "scene/cube.h"
+#include "scene/meshsphere.h"
 #include "QGuiApplication"
 #include <QTimer>
 
@@ -14,6 +15,7 @@ using namespace scene;
 OpenGLPanel::OpenGLPanel(QWidget *parent)
      : QOpenGLWidget(parent)
 {
+    // opengl context version
     QSurfaceFormat format;
     format.setMajorVersion(4);
     format.setMinorVersion(5);
@@ -22,12 +24,15 @@ OpenGLPanel::OpenGLPanel(QWidget *parent)
 
     setFormat(format);
 
+    // logger
     this->logger = new QOpenGLDebugLogger(this);
     connect(this->logger, &QOpenGLDebugLogger::messageLogged, this, &OpenGLPanel::handleOpenglMessage);
 
+    // loop timer
     this->timer = new QTimer(this);
     connect(this->timer, &QTimer::timeout, this, &OpenGLPanel::Redraw);
 
+    // input
     this->handler = new InputHandler();
     installEventFilter(this->handler);
 
@@ -35,48 +40,8 @@ OpenGLPanel::OpenGLPanel(QWidget *parent)
     grabKeyboard();
 }
 
+// called every cycle of timer
 void OpenGLPanel::Redraw() {
-    this->update();
-}
-
-void OpenGLPanel::handleOpenglMessage(const QOpenGLDebugMessage &debugMessage) {
-    std::cout << debugMessage.message().toStdString() << std::endl;
-}
-
-void OpenGLPanel::initializeGL() {
-    logger->initialize();
-    logger->startLogging();
-
-    initializeOpenGLFunctions();
-
-    this->renderer = new Rasterizer();
-    this->scene = new Scene();
-
-    Cube* cube;
-    for(int i = 0; i < 10; i++) {
-        for(int o = 0; o < 10; o++) {
-            cube = new Cube();
-            cube->Scale(0.1f);
-            cube->Move(-0.5f + i * 0.1f, -0.5f + o * 0.1f, -1.0f);
-            scene->AddObject(cube);
-        }
-    }
-
-    this->cam = new Camera();
-    this->cam->fov = 70;
-    this->cam->roll = 0.0f;
-    this->cam->yaw = 0.0f;
-    this->cam->pitch = 0.0f;
-    this->cam->aspectRatio = width() / height();
-    this->cam->nearPlane = 0.1f;
-    this->cam->farPlane = 100.0f;
-    this->cam->Move(0.0f, 0.0f, 0.0f);
-
-    renderer->Init();
-    timer->start(100);
-}
-
-void OpenGLPanel::paintGL() {
     this->time += 0.1f;
 
     float speed = 0.1f;
@@ -124,17 +89,79 @@ void OpenGLPanel::paintGL() {
     this->cam->pitch += pitch;
     this->cam->yaw += yaw;
 
-    /*
-    this->cube->RotateY(5);
-    this->cube->RotateX(3.2f);
-    this->cube->Move(0.0f, 0.0f, -0.05f);
-    */
-
-    renderer->Clear();
-    renderer->Draw(*(this->scene), *cam);
+    // calls function paintGL
+    this->update();
 }
 
+void OpenGLPanel::initializeGL() {
+    logger->initialize();
+    logger->startLogging();
+
+    initializeOpenGLFunctions();
+
+    this->renderer = new Renderer();
+    this->tracer = new Tracer();
+    this->scene = new Scene();
+
+    MeshSphere* s = new MeshSphere(20, 20);
+    s->RotateX(-90.0f);
+    s->Move(0.0f, 0.0f, -2.1f);
+    //s->GetMesh().SetWireFrame(true);
+    scene->AddSphere(new Sphere({0.0f, 0.0f, 0.0f}, 0.5f));
+    scene->AddSphere(new Sphere({0.0f, -0.7f, 0.0f}, 0.25f));
+    scene->AddSphere(new Sphere({0.0f, 1.0f, 0.0f}, 0.7f));
+    scene->AddSphere(new Sphere({1.0f, 2.0f, -7.0f}, 0.4f));
+    scene->AddSphere(new Sphere({2.0f, 2.0f, -5.0f}, 0.33f));
+    scene->AddSphere(new Sphere({3.0f, 4.0f, 0.0f}, 0.21f));
+    scene->AddObject(s);
+
+    /*
+    Cube* cube;
+    for(int i = 0; i < 10; i++) {
+        for(int o = 0; o < 10; o++) {
+            cube = new Cube();
+            cube->Scale(0.1f);
+            cube->Move(-0.5f + i * 0.1f, -0.5f + o * 0.1f, -1.0f);
+            scene->AddObject(cube);
+        }
+    }
+    */
+
+    this->cam = new Camera();
+    this->cam->fov = 70;
+    this->cam->aspectRatio = width() / height();
+    this->cam->nearPlane = 0.1f;
+    this->cam->farPlane = 100.0f;
+
+    timer->start(100);
+}
+
+// *OpenGL functions must be called from this function
+void OpenGLPanel::paintGL() {
+    if(this->handler->IsKeyPressed(Qt::Key_T) && !traced) {
+        tracer->Prepare();
+        tracer->Draw(*(this->scene), *cam);
+        traced = true;
+    } else {
+        this->traced = false;
+    }
+
+    renderer->Prepare();
+    renderer->SetPolygonMode(GL_FILL);
+    renderer->Clear();
+    renderer->Draw(*(this->scene), *cam);
+
+    if(tracer->HasRays()) {
+        renderer->SetPolygonMode(GL_LINE);
+        renderer->Draw(tracer->GetRays(), *cam);
+    }
+}
+
+// if component is resized
 void OpenGLPanel::resizeGL(int w, int h) {
     cam->aspectRatio = (float)w / (float)h;
-    //this->program->LoadUniformMat4x4(projection_location, cam->CalculateProjectionMatrix());
+}
+
+void OpenGLPanel::handleOpenglMessage(const QOpenGLDebugMessage &debugMessage) {
+    std::cout << debugMessage.message().toStdString() << std::endl;
 }

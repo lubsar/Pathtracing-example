@@ -5,6 +5,7 @@
 #include "glm.hpp"
 
 namespace graphics {
+    //TODO cleanups
     class GLSLProgram : public QOpenGLFunctions_4_5_Core
     {
     private:
@@ -26,6 +27,8 @@ namespace graphics {
         GLuint GetUniform(const GLchar* name);
         GLuint GetAttribute(const GLchar* name);
         void LoadUniformMat4x4(GLuint uniform, const glm::mat4x4& data);
+
+        void Use();
     };
 }
 
