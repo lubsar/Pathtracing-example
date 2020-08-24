@@ -7,9 +7,9 @@ namespace scene {
     class Camera
     {
     private:
-        glm::vec3 position;
-        glm::mat4x4* view;
-        glm::mat4x4* projection;
+        glm::vec3 m_position;
+        glm::mat4x4* m_view;
+        glm::mat4x4* m_projection;
 
     public:
         Camera();
@@ -25,6 +25,9 @@ namespace scene {
 
         void Move(glm::vec3 offset);
         void Move(float xOffset, float yOffset, float zOffset);
+
+        glm::vec3& GetPosition();
+
         glm::mat4x4& CalculateProjectionMatrix();
         glm::mat4x4& CalculateViewMatrix();
     };

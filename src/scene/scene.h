@@ -3,6 +3,7 @@
 
 #include "object.h"
 #include "sphere.h"
+#include "sphericallight.h"
 
 #include <vector>
 
@@ -12,6 +13,7 @@ namespace scene {
     private:
         std::vector<Object*>* m_objects;
         std::vector<Sphere*>* m_spheres;
+        SphericalLight* m_light;
 
     public:
         Scene();
@@ -22,6 +24,9 @@ namespace scene {
 
         std::vector<Sphere*>* GetSpheres();
         void AddSphere(Sphere* sphere);
+
+        void SetLight(SphericalLight* light);
+        SphericalLight* GetLight();
     };
 }
 

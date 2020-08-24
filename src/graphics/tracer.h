@@ -13,22 +13,25 @@ namespace graphics {
     class Tracer : protected QOpenGLFunctions_4_5_Core
     {
     private:
-        GLuint m_program;
+        GLSLProgram* m_program;
         scene::Object* m_rays;
 
+        GLuint m_resultTexture;
+
+        //TODO extract
         void BuildRays(glm::vec3 origin, glm::vec4* hits, unsigned int num_rays);
+        glm::vec3 CalculateCornerRay(const glm::vec4& corner, scene::Camera& camera);
 
     public:
         Tracer();
         ~Tracer() override;
 
-        void Prepare();
-        void Clear();
+        void Draw(scene::Scene& scene, scene::Camera& cam, unsigned int width, unsigned int height);
 
-        void Draw(scene::Scene& scene, scene::Camera& camera);
-
-        bool HasRays();
+        bool HasResult();
         scene::Object& GetRays();
+
+        GLuint GetResultTexture();
     };
 }
 #endif // TRACER_H

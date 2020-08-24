@@ -1,35 +1,44 @@
 #ifndef GLSLPROGRAM_H
 #define GLSLPROGRAM_H
 
-#include <qopenglfunctions_4_5_core.h>
+#include <QOpenGLFunctions_4_5_Core>
+
 #include "glm.hpp"
 
 namespace graphics {
-    //TODO cleanups
-    class GLSLProgram : public QOpenGLFunctions_4_5_Core
+    class GLSLProgram : private QOpenGLFunctions_4_5_Core
     {
     private:
-        std::string vertexSourceCode;
-        std::string fragmentSourceCode;
-
-        GLuint vertexShader = 0;
-        GLuint fragmentShader = 0;
-
-        GLuint program = 0;
+        GLuint m_programID;
+        std::vector<GLint>* m_shaders;
+        std::map<std::string, GLint>* m_uniforms;
 
     public:
         GLSLProgram();
-        GLSLProgram(const char* vertexPath, const char* fragmentPath);
+        ~GLSLProgram();
 
-        void SetSources(const char* vertexSource, const char* fragmentSource);
+        GLint AddShader(GLenum type, std::string source);
+        void BindFragDataLocation(GLint color, const std::string& name);
 
-        void Prepare();
-        GLuint GetUniform(const GLchar* name);
-        GLuint GetAttribute(const GLchar* name);
-        void LoadUniformMat4x4(GLuint uniform, const glm::mat4x4& data);
+        GLint SetAttribute(const std::string& name, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer);
 
+        GLint AddUniform(const std::string& name);
+        GLint GetUniform(const std::string& name);
+
+        void SetUniform(const std::string name, glm::mat4x4& value);
+        void SetUniform(GLint location, glm::mat4x4& value);
+        void SetUniform(const std::string name, glm::vec3& value);
+        void SetUniform(GLint location, glm::vec3& value);
+        void SetUniform(const std::string name, float value);
+        void SetUniform(GLint location, float value);
+
+        void Link();
         void Use();
+
+        GLuint GetProgramID();
     };
 }
+
+
 
 #endif // GLSLPROGRAM_H

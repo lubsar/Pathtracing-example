@@ -17,31 +17,35 @@
 class OpenGLPanel : public QOpenGLWidget, protected QOpenGLFunctions_4_5_Core
 {
     Q_OBJECT
-
-public:
-    OpenGLPanel(QWidget* parent = nullptr);
-
 private:
-    graphics::Renderer* renderer;
-    graphics::Tracer* tracer;
-    QOpenGLDebugLogger* logger;
+    graphics::Renderer* m_renderer;
+    graphics::Tracer* m_tracer;
+    QOpenGLDebugLogger* m_logger;
 
-    InputHandler* handler;
+    InputHandler* m_input;
 
-    scene::Camera* cam;
-    scene::Scene* scene;
+    scene::Camera* m_cam;
+    scene::Scene* m_scene;
 
-    float time = 0.0f;
-    bool traced;
-    QTimer *timer;
+    bool m_traced;
+    bool m_trace;
+    bool m_showResult;
+    bool m_showRays;
+    bool m_showFrustum;
 
-    void Redraw();
+    QTimer* m_timer;
+
+    void Update();
     void handleOpenglMessage(const QOpenGLDebugMessage &debugMessage);
 
 protected:
     void initializeGL() override;
     void resizeGL(int w, int h) override;
     void paintGL() override;
+
+public:
+    OpenGLPanel(QWidget* parent = nullptr);
+    ~OpenGLPanel();
 };
 
 #endif // OPENGLPANEL_H

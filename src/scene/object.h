@@ -16,7 +16,7 @@ namespace scene {
         Object();
 
         void SetTransformation(glm::mat4x4& transform);
-        glm::mat4x4 GetTransformation();
+        glm::mat4x4& GetTransformation();
 
         void RotateX(float angleDeg);
         void RotateY(float angleDeg);

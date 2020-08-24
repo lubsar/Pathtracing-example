@@ -7,11 +7,20 @@
 namespace scene {
     class Sphere
     {
-    public:
+    private:
         glm::vec3 m_center;
         float m_radius;
+        glm::vec3 m_color;
 
-        Sphere(glm::vec3 center, float radius);
+    public:
+        Sphere(const glm::vec3& center, float radius, const glm::vec3& color);
+
+        float GetRadius();
+        glm::vec3& GetCenter();
+        glm::vec3& GetColor();
+
+        void Move(const glm::vec3& offset);
+        void Move(float xOffset, float yOffset, float zOffset);
     };
 }
 

@@ -13,7 +13,7 @@ namespace scene {
         this->transformation = transform;
     }
 
-    glm::mat4x4 Object::GetTransformation() {
+    glm::mat4x4& Object::GetTransformation() {
         return this->transformation;
     }
 

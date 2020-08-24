@@ -11,11 +11,12 @@ class InputHandler : public QObject
     Q_OBJECT
 
 private:
-    std::set<int> pressedKeys;
-    std::set<int> pressedButtons;
+    std::set<int> m_pressedKeys;
+    std::set<int> m_pressedButtons;
+    std::set<int> m_clickedKeys;
 
-    int mouseX;
-    int mouseY;
+    int m_mouseX;
+    int m_mouseY;
 
 protected:
     bool eventFilter(QObject* obj, QEvent* event);
@@ -24,8 +25,10 @@ public:
     InputHandler();
 
     bool IsKeyPressed(Qt::Key key);
+    bool IsKeyClicked(Qt::Key key);
 
     bool IsMousePressed(Qt::MouseButton button);
+
     int GetMouseX();
     int GetMouseY();
 };

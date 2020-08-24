@@ -20,7 +20,9 @@ INCLUDEPATH += \
     src
 
 SOURCES += \
+    src/graphics/glslprogram.cpp \
     src/graphics/renderer.cpp \
+    src/graphics/texturedquad.cpp \
     src/graphics/tracer.cpp \
     src/gui/inputhandler.cpp \
     src/gui/mainwindow.cpp \
@@ -32,6 +34,7 @@ SOURCES += \
     src/scene/object.cpp \
     src/scene/scene.cpp \
     src/scene/sphere.cpp \
+    src/scene/sphericallight.cpp \
     src/util/maths.cpp \
     src/util/shader.cpp \
     src\main.cpp
@@ -39,6 +42,7 @@ SOURCES += \
 HEADERS += \
     src/graphics/glslprogram.h \
     src/graphics/renderer.h \
+    src/graphics/texturedquad.h \
     src/graphics/tracer.h \
     src/gui/inputhandler.h \
     src/gui/mainwindow.h \
@@ -50,6 +54,7 @@ HEADERS += \
     src/scene/object.h \
     src/scene/scene.h \
     src/scene/sphere.h \
+    src/scene/sphericallight.h \
     src/util/maths.h \
     src/util/shader.h
 
@@ -62,6 +67,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
     shaders/renderer.frag \
     shaders/renderer.vert \
+    shaders/renderer_instanced.vert \
+    shaders/renderer_texture.frag \
+    shaders/renderer_texture.vert \
     shaders/tracer.glsl
 
 COPIES += shaders

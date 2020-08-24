@@ -6,38 +6,45 @@
 
 InputHandler::InputHandler() : QObject()
 {
-    this->pressedKeys = std::set<int>();
+    this->m_pressedKeys = std::set<int>();
 }
 
 bool InputHandler::eventFilter(QObject* obj, QEvent* event)
 {
     switch(event->type()) {
         case QEvent::KeyPress: {
-            this->pressedKeys.insert(static_cast<QKeyEvent*>(event)->key());
+            this->m_pressedKeys.insert(static_cast<QKeyEvent*>(event)->key());
             return true;
         }
         break;
         case QEvent::KeyRelease: {
-            this->pressedKeys.erase(static_cast<QKeyEvent*>(event)->key());
+            int key = static_cast<QKeyEvent*>(event)->key();
+
+            if(this->m_clickedKeys.find(key) != this->m_clickedKeys.end()) {
+                this->m_clickedKeys.erase(key);
+            }
+
+            this->m_pressedKeys.erase(key);
+
             return true;
         }
         break;
         case QEvent::MouseMove: {
             QMouseEvent* mouse_event = static_cast<QMouseEvent*>(event);
 
-            this->mouseX = mouse_event->x();
-            this->mouseY = mouse_event->y();
+            this->m_mouseX = mouse_event->x();
+            this->m_mouseY = mouse_event->y();
 
             return true;
         }
         break;
         case QEvent::MouseButtonPress: {
-            this->pressedButtons.insert(static_cast<QMouseEvent*>(event)->button());
+            this->m_pressedButtons.insert(static_cast<QMouseEvent*>(event)->button());
             return true;
         }
         break;
         case QEvent::MouseButtonRelease: {
-            this->pressedButtons.erase(static_cast<QMouseEvent*>(event)->button());
+            this->m_pressedButtons.erase(static_cast<QMouseEvent*>(event)->button());
             return true;
         }
         break;
@@ -47,17 +54,26 @@ bool InputHandler::eventFilter(QObject* obj, QEvent* event)
 }
 
 bool InputHandler::IsKeyPressed(Qt::Key key) {
-    return this->pressedKeys.find(key) != this->pressedKeys.end();
+    return this->m_pressedKeys.find(key) != this->m_pressedKeys.end();
+}
+
+bool InputHandler::IsKeyClicked(Qt::Key key) {
+    if(IsKeyPressed(key) && this->m_clickedKeys.find(key) == this->m_clickedKeys.end()) {
+        this->m_clickedKeys.insert(key);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool InputHandler::IsMousePressed(Qt::MouseButton button) {
-    return this->pressedButtons.find(button) != this->pressedButtons.end();
+    return this->m_pressedButtons.find(button) != this->m_pressedButtons.end();
 }
 
 int InputHandler::GetMouseX() {
-    return this->mouseX;
+    return this->m_mouseX;
 }
 
 int InputHandler::GetMouseY() {
-    return this->mouseY;
+    return this->m_mouseY;
 }

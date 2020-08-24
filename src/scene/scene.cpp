@@ -8,8 +8,15 @@ namespace scene {
     }
 
     Scene::~Scene() {
-        delete m_objects;
-        delete m_spheres;
+        for(Object* obj : *this->m_objects) {
+            delete obj;
+        }
+        delete this->m_objects;
+
+        for(Sphere* sphere : *this->m_spheres) {
+            delete sphere;
+        }
+        delete this->m_spheres;
     }
 
     void Scene::AddObject(Object* obj) {
@@ -26,5 +33,13 @@ namespace scene {
 
     std::vector<Sphere*>* Scene::GetSpheres() {
         return this->m_spheres;
+    }
+
+    void Scene::SetLight(SphericalLight *light) {
+        this->m_light = light;
+    }
+
+    SphericalLight* Scene::GetLight() {
+        return this->m_light;
     }
 }
