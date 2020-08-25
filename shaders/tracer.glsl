@@ -96,6 +96,7 @@ float illuminate(vec3 point, vec3 normal, ivec2 pixel) {
         }
     }
 
+    // shadow ray: primary ray hitpoint -> light
     debug_data[(pixel.x + pixel.y * imageSize(outputImage).x)* 2 + 1] = vec4(light_position, 1.0);
 
     if(sphere_index > -1) {
@@ -122,7 +123,9 @@ vec4 trace(const Ray ray, ivec2 pixel) {
 
     vec3 hitpoint = hitPoint(ray, closest_t);
 
+    // primary ray: origin(eye) -> hitpoint
     debug_data[(pixel.x + pixel.y * imageSize(outputImage).x)*2] = vec4(hitpoint, 1.0);
+
     if(sphere_index > -1) {
         return spheres[sphere_index + 1] * illuminate(hitpoint, normalize(hitpoint - spheres[sphere_index].xyz), pixel);
     } else {
