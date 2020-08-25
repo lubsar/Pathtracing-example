@@ -5,8 +5,8 @@ Vytvorené za pomoci [QT framework](https://www.qt.io) (Rozhranie, OpenGL bindin
 
 
 ### Výsledok primitívneho path-traceru (svetlo nie je vykreslené)
-![Výsledok][/img/result.png]
+![Výsledok](/img/result.png)
 
 ### Jednoduchý OpenGL vykresľovací reťazec na odladenie
 Primárne lúče sú čierne, červený bod je pozícia bodového svetla
-![Ladenie][/img/debug.png]
+![Ladenie](/img/debug.png)
